@@ -1,0 +1,87 @@
+.trip-tracker-container {
+    padding: 16px;
+    max-width: 400px;
+    margin: auto;
+    background: #f0f2f5;
+    border-radius: 10px;
+  }
+  
+  .user-location {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  
+  .user-location p {
+    margin: 0;
+  }
+  
+  .map-card {
+    border-radius: 10px;
+  }
+  
+  .map-placeholder {
+    position: relative;
+  }
+  
+  .map-image {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+  }
+  
+  .distance-info {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+  }
+  
+  .trip-info {
+    margin-top: 16px;
+  }
+  
+  .status-tag {
+    background: orange;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 5px;
+    float: right;
+  }
+  
+  .timeline {
+    margin: 16px 0;
+  }
+  
+  .action-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 16px;
+  }
+  
+  .otp-button {
+    width: 45%;
+    background: #722ed1;
+    border-color: #722ed1;
+  }
+  
+  .call-button {
+    width: 45%;
+    background: #52c41a;
+    border-color: #52c41a;
+  }
+  
+  .bottom-navigation {
+    display: flex;
+    justify-content: space-evenly;
+    margin-top: 16px;
+  }
+  /* .bottom-navigation div{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  } */
