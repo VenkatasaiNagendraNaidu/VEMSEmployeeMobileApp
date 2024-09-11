@@ -1,29 +1,37 @@
-import React, { useState } from 'react';
-import { Button, DatePicker, TimePicker, Modal } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Button, DatePicker, TimePicker, Modal, message } from 'antd';
 import { LeftOutlined, BellOutlined, CheckCircleOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { useNavigate } from 'react-router-dom';
-
-const { RangePicker } = DatePicker;
+import Cookies from 'js-cookie';
+import axios from 'axios';
 
 const CreateTrips = () => {
   const navigate = useNavigate();
   
   // State to hold selected values
-  const [selectedDay, setSelectedDay] = useState('');
-  const [routine, setRoutine] = useState('');
-  const [inTime, setInTime] = useState(moment('10:00 AM', 'h:mm A'));
-  const [outTime, setOutTime] = useState(moment('7:00 PM', 'h:mm A'));
-  const [date, setDate] = useState(moment('2023-09-29', 'YYYY-MM-DD'));
+  const [routine, setRoutine] = useState('Pickup');
+  const [inTime, setInTime] = useState(null);
+  const [outTime, setOutTime] = useState(null);
+  const [date, setDate] = useState(moment()); // Set default to today
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isNextDisabled, setIsNextDisabled] = useState(true);
+
+  const empId = Cookies.get('EmployeeID'); // Get EmployeeID from cookies
 
   // Handle button click for routine
   const handleRoutineClick = (routineOption) => {
     setRoutine(routineOption);
+    // Reset times when routine changes
+    if (routineOption === 'Pickup') {
+      setOutTime(null);
+    } else if (routineOption === 'Drop') {
+      setInTime(null);
+    }
   };
 
   // Handle time picker change
-  const handleTimeChange = (time, timeString, type) => {
+  const handleTimeChange = (time, type) => {
     if (type === 'in') {
       setInTime(time);
     } else {
@@ -32,13 +40,48 @@ const CreateTrips = () => {
   };
 
   // Handle date picker change
-  const handleDateChange = (date) => {
-    setDate(date);
+  const handleDateChange = (selectedDate) => {
+    setDate(selectedDate);
   };
 
-  // Log values on 'Next' button click and show confirmation modal
-  const handleNextClick = () => {
-    setIsModalVisible(true); // Show confirmation modal
+  // Enable or disable the Next button based on selections
+  useEffect(() => {
+    if (!routine || !date) {
+      setIsNextDisabled(true);
+      return;
+    }
+
+    if (routine === 'Pickup' && inTime) {
+      setIsNextDisabled(false);
+    } else if (routine === 'Drop' && outTime) {
+      setIsNextDisabled(false);
+    } else {
+      setIsNextDisabled(true);
+    }
+  }, [routine, inTime, outTime, date]);
+
+  // Send data to backend on 'Next' button click
+  const handleNextClick = async () => {
+    if (!empId) {
+      message.error('Employee ID not found. Please log in again.');
+      return;
+    }
+
+    const tripData = {
+      EmployeeID: empId,
+      date: date.format('YYYY-MM-DD'),
+      inTime: routine === 'Pickup' && inTime ? inTime.format('HH:mm:ss') : null,
+      outTime: routine === 'Drop' && outTime ? outTime.format('HH:mm:ss') : null,
+    };
+
+    try {
+      const response = await axios.post('http://localhost:5000/emp/trips', tripData);
+      console.log(response.data);
+      setIsModalVisible(true); // Show confirmation modal
+    } catch (error) {
+      console.error('Error creating/updating trip:', error);
+      message.error('Failed to place cab request. Please try again.');
+    }
   };
 
   // Close the modal when "Done" is clicked
@@ -51,9 +94,9 @@ const CreateTrips = () => {
     <div style={{ padding: '20px', maxWidth: '100%', margin: '0 auto' }}>
       {/* Header with Back Button and Notification */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <LeftOutlined onClick={() => navigate('/dashboard')} />
+        <LeftOutlined onClick={() => navigate('/dashboard')} style={{ fontSize: '20px', cursor: 'pointer' }} />
         <h3>Create Trips</h3>
-        <BellOutlined />
+        <BellOutlined style={{ fontSize: '20px', cursor: 'pointer' }} />
       </div>
 
       {/* Routine */}
@@ -64,7 +107,11 @@ const CreateTrips = () => {
             <Button
               key={option}
               onClick={() => handleRoutineClick(option)}
-              style={{ color: routine === option ? 'white' : '', backgroundColor: routine === option ? 'rgb(24, 144, 255)' : '' }}
+              style={{ 
+                color: routine === option ? 'white' : '', 
+                backgroundColor: routine === option ? 'rgb(24, 144, 255)' : '',
+                width: '100px'
+              }}
             >
               {option}
             </Button>
@@ -72,15 +119,16 @@ const CreateTrips = () => {
         </div>
       </div>
 
-      {/* Check-In and Check-Out based on routine */}
+      {/* Time Picker */}
       <div style={{ marginTop: '20px' }}>
         {routine === 'Pickup' && (
           <div>
             <p>In Time</p>
             <TimePicker
-              defaultValue={inTime}
+              value={inTime}
               format={'h:mm A'}
-              onChange={(time, timeString) => handleTimeChange(time, timeString, 'in')}
+              onChange={(time) => handleTimeChange(time, 'in')}
+              style={{ width: '100%' }}
             />
           </div>
         )}
@@ -89,28 +137,33 @@ const CreateTrips = () => {
           <div>
             <p>Out Time</p>
             <TimePicker
-              defaultValue={outTime}
+              value={outTime}
               format={'h:mm A'}
-              onChange={(time, timeString) => handleTimeChange(time, timeString, 'out')}
+              onChange={(time) => handleTimeChange(time, 'out')}
+              style={{ width: '100%' }}
             />
           </div>
         )}
       </div>
 
-      {/* Calendar */}
+      {/* Date Picker */}
       <div style={{ marginTop: '20px' }}>
         <p>Date Of Schedule</p>
         <DatePicker
-          fullscreen={false}
           style={{ width: '100%' }}
-          defaultValue={date}
+          value={date}
           onChange={handleDateChange}
         />
       </div>
 
       {/* Next Button */}
       <div style={{ marginTop: '20px', textAlign: 'right' }}>
-        <Button type="primary" style={{ width: '100px' }} onClick={handleNextClick}>
+        <Button 
+          type="primary" 
+          style={{ width: '100px' }} 
+          onClick={handleNextClick}
+          disabled={isNextDisabled}
+        >
           Next
         </Button>
       </div>
@@ -124,7 +177,7 @@ const CreateTrips = () => {
       >
         <div style={{ textAlign: 'center', padding: '20px' }}>
           <CheckCircleOutlined style={{ fontSize: '64px', color: 'green', animation: 'bounce 1s infinite' }} />
-          <h2>Cab Booking Confirmed!</h2>
+          <h2>Cab Request Placed Successfully!</h2>
           <p><strong>Routine:</strong> {routine}</p>
           <p><strong>Date:</strong> {date ? date.format('YYYY-MM-DD') : 'Not selected'}</p>
           {routine === 'Pickup' && <p><strong>In Time:</strong> {inTime ? inTime.format('h:mm A') : 'Not selected'}</p>}

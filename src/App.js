@@ -9,6 +9,7 @@ import EmployeeHome from './Components/EmployeeHome/EmployeeHome';
 import CreateTrips from './Components/CreateTrips/CreateTrips';
 import UpcomingTrips from './Components/UpcomingTrips/UpcomingTrips';
 import TripHistory from './Components/TripHistory/TripHistory';
+import ExcelUpload from './Components/admin/ExcelUpload';
 
 const App = () => {
   return (
@@ -23,6 +24,7 @@ const App = () => {
         <Route path="/upcomingtrips" element={<UpcomingTrips/>}/>
         <Route path="/triphistory" element={<TripHistory/>}/>
         <Route path="/empschedule" element={<EmployeeScheduler/>}/>
+        {/* <Route path="/admin" element={<ExcelUpload/>} /> */}
       </Routes>
     </Router>
     </>

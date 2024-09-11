@@ -7,7 +7,7 @@ import Cookies from 'js-cookie';
 const EmployeeLogin = () => {
   const [empId, setEmpId] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async() => {
@@ -21,23 +21,27 @@ const EmployeeLogin = () => {
       message.success("Login Successful");
       navigate('/dashboard');
     } catch (error) {
-      setError('Invalid credentials!');
+      message.error('Invalid credentials!');
     }
-    // const employeeLog = JSON.parse(localStorage.getItem('employeeLog')) || [];
-    // const employee = employeeLog.find(emp => emp.empId === empId && emp.password === password);
+  };
 
-    // if (employee) {
-    //     message.success("Login Successful")
-    //   navigate('/dashboard'); // Navigate to the dashboard page on successful login
-    // } else {
-    //   setError('Invalid credentials!');
-    // }
+  const handleResetPassword = async () => {
+    setLoading(true);
+    try {
+      console.log(empId);
+      
+      // Send a request to the backend to reset the password
+      await axios.post('http://localhost:5000/emp/reset-password', { EmployeeID : empId });
+      message.success('A new password has been sent to your email.');
+    } catch (error) {
+      message.error('Error sending reset password email.');
+    }
+    setLoading(false);
   };
 
   return (
-    <div style={{ maxWidth: 400,display:"flex",alignItems:"center",flexDirection:"column", margin: 'auto',padding :"auto" }}>
+    <div style={{ maxWidth: 400, display: "flex", alignItems: "center", flexDirection: "column", margin: 'auto', padding: "auto" }}>
       <h3 style={{ textAlign: 'center' }}>Employee Login</h3>
-      {error && <Alert message={error} type="error" showIcon style={{ marginBottom: 20 }} />}
       <Form
         name="login"
         layout="vertical"
@@ -63,6 +67,14 @@ const EmployeeLogin = () => {
           </Button>
         </Form.Item>
       </Form>
+      
+      <Button
+        type="link"
+        onClick={handleResetPassword}
+        disabled={!empId || loading}
+      >
+        {loading ? 'Sending reset link...' : 'Forgot Password?'}
+      </Button>
     </div>
   );
 };
