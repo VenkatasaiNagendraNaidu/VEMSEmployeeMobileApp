@@ -66,14 +66,30 @@ const CreateTrips = () => {
       message.error('Employee ID not found. Please log in again.');
       return;
     }
-
+  
+    const currentTime = moment(); // Get current time
+    const minPickupTime = currentTime.clone().add(6, 'hours'); // Minimum time for Pickup
+    const minDropTime = currentTime.clone().add(2, 'hours'); // Minimum time for Drop
+  
+    // Check time validation for Pickup
+    if (routine === 'Pickup' && (date.isSame(currentTime, 'day') && (!inTime || inTime.isBefore(minPickupTime)))) {
+      message.error('Pickup time must be at least 6 hours from the current time.');
+      return;
+    }
+  
+    // Check time validation for Drop
+    if (routine === 'Drop' && (date.isSame(currentTime, 'day') && (!outTime || outTime.isBefore(minDropTime)))) {
+      message.error('Drop time must be at least 2 hours from the current time.');
+      return;
+    }
+  
     const tripData = {
-      EmployeeID: empId,
+      employeeId: empId,
       date: date.format('YYYY-MM-DD'),
       inTime: routine === 'Pickup' && inTime ? inTime.format('HH:mm:ss') : null,
       outTime: routine === 'Drop' && outTime ? outTime.format('HH:mm:ss') : null,
     };
-
+  
     try {
       const response = await axios.post('http://localhost:5000/emp/trips', tripData);
       console.log(response.data);
@@ -82,7 +98,7 @@ const CreateTrips = () => {
       console.error('Error creating/updating trip:', error);
       message.error('Failed to place cab request. Please try again.');
     }
-  };
+  };  
 
   // Close the modal when "Done" is clicked
   const handleDone = () => {
@@ -91,7 +107,7 @@ const CreateTrips = () => {
   };
 
   return (
-    <div style={{ padding: '20px', maxWidth: '100%', margin: '0 auto' }}>
+    <div style={{ padding: '20px', maxWidth: '400px', margin: '0 auto' }}>
       {/* Header with Back Button and Notification */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <LeftOutlined onClick={() => navigate('/dashboard')} style={{ fontSize: '20px', cursor: 'pointer' }} />
@@ -153,18 +169,19 @@ const CreateTrips = () => {
           style={{ width: '100%' }}
           value={date}
           onChange={handleDateChange}
+          disabledDate={(current) => current && current < moment().startOf('day')}
         />
       </div>
 
       {/* Next Button */}
-      <div style={{ marginTop: '20px', textAlign: 'right' }}>
+      <div style={{ marginTop: '25px', textAlign: 'center' }}>
         <Button 
           type="primary" 
           style={{ width: '100px' }} 
           onClick={handleNextClick}
           disabled={isNextDisabled}
         >
-          Next
+          Submit
         </Button>
       </div>
 

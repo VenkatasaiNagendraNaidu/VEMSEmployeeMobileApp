@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, Tabs, Button, List } from 'antd';
-import { LeftOutlined,BellOutlined, SearchOutlined, EnvironmentOutlined, CloseCircleOutlined } from '@ant-design/icons';
+import { LeftOutlined,BellOutlined, SearchOutlined, EnvironmentOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 
 const { TabPane } = Tabs;

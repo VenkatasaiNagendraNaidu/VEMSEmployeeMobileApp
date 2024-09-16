@@ -13,10 +13,10 @@ const EmployeeLogin = () => {
   const handleLogin = async() => {
     try {
       const response = await axios.post('http://localhost:5000/emp/login', { empId, password });
-      const { id: EmployeeID } = response.data; // Destructuring EmployeeID sent from the backend
+      const { id: employeeId } = response.data; // Destructuring employeeId sent from the backend
       
-      // Set the EmployeeID in the cookie (no expiry)
-      Cookies.set('EmployeeID', EmployeeID, { path: '/' });
+      // Set the employeeId in the cookie (no expiry)
+      Cookies.set('EmployeeID', employeeId, { path: '/' });
       
       message.success("Login Successful");
       navigate('/dashboard');
@@ -31,7 +31,7 @@ const EmployeeLogin = () => {
       console.log(empId);
       
       // Send a request to the backend to reset the password
-      await axios.post('http://localhost:5000/emp/reset-password', { EmployeeID : empId });
+      await axios.post('http://localhost:5000/emp/reset-password', { employeeId : empId });
       message.success('A new password has been sent to your email.');
     } catch (error) {
       message.error('Error sending reset password email.');

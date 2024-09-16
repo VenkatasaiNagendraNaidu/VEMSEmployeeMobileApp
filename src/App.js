@@ -7,9 +7,8 @@ import EmployeeLogin from './Components/EmployeeLogin/EmployeeLogin';
 import EmployeeHeader from './Components/EmployeeHeader';
 import EmployeeHome from './Components/EmployeeHome/EmployeeHome';
 import CreateTrips from './Components/CreateTrips/CreateTrips';
-import UpcomingTrips from './Components/UpcomingTrips/UpcomingTrips';
 import TripHistory from './Components/TripHistory/TripHistory';
-import ExcelUpload from './Components/admin/ExcelUpload';
+import CabRequests from './Components/CabRequests/CabRequests';
 
 const App = () => {
   return (
@@ -21,10 +20,9 @@ const App = () => {
         {/* <Route path="/" element={<EmployeeRegistration/>} /> */}
         <Route path="/dashboard" element={<EmployeeHome/>} />
         <Route path="/createtrips" element={<CreateTrips/>}/>
-        <Route path="/upcomingtrips" element={<UpcomingTrips/>}/>
+        <Route path="/triprequests" element={<CabRequests/>}/>
         <Route path="/triphistory" element={<TripHistory/>}/>
         <Route path="/empschedule" element={<EmployeeScheduler/>}/>
-        {/* <Route path="/admin" element={<ExcelUpload/>} /> */}
       </Routes>
     </Router>
     </>
