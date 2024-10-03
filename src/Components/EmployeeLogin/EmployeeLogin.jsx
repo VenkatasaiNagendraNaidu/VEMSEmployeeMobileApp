@@ -13,10 +13,10 @@ const EmployeeLogin = () => {
   const handleLogin = async() => {
     try {
       const response = await axios.post('http://localhost:5000/emp/login', { empId, password });
-      const { id: employeeId } = response.data; // Destructuring employeeId sent from the backend
+      const { id: EmployeeId } = response.data; // Destructuring EmployeeId sent from the backend
       
-      // Set the employeeId in the cookie (no expiry)
-      Cookies.set('EmployeeID', employeeId, { path: '/' });
+      // Set the EmployeeId in the cookie (no expiry)
+      Cookies.set('EmployeeID', EmployeeId, { path: '/' });
       
       message.success("Login Successful");
       navigate('/dashboard');
@@ -31,7 +31,7 @@ const EmployeeLogin = () => {
       console.log(empId);
       
       // Send a request to the backend to reset the password
-      await axios.post('http://localhost:5000/emp/reset-password', { employeeId : empId });
+      await axios.post('http://localhost:5000/emp/reset-password', { EmployeeId : empId });
       message.success('A new password has been sent to your email.');
     } catch (error) {
       message.error('Error sending reset password email.');
@@ -40,7 +40,10 @@ const EmployeeLogin = () => {
   };
 
   return (
-    <div style={{ maxWidth: 400, display: "flex", alignItems: "center", flexDirection: "column", margin: 'auto', padding: "auto" }}>
+    <div style={{ maxWidth: 400, display: "flex", alignItems: "center", flexDirection: "column", marginTop:"20px", padding: "auto" }}>
+      {/* <div className="logo">
+          <img src="https://res.cloudinary.com/dlo7urgnj/image/upload/v1727276496/vemslogo_rsa3cx.png" alt="Logo" style={{height:"100px", width:"100px", margin:"0 10px"}}/>
+        </div> */}
       <h3 style={{ textAlign: 'center' }}>Employee Login</h3>
       <Form
         name="login"

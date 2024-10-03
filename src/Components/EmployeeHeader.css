@@ -1,24 +1,32 @@
 .EmployeeScheduler-home {
+    display: flex;
+    justify-content: space-evenly;
     width: 100%;
-    /* color: red; */
-    text-align: center;
-    background: linear-gradient(45deg, #89CFF0, #54f554);
-    padding: 20px 0px;
-    /* border-rad       ius: 8px; */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
+    /* text-align: center; */
+    align-items: center;
+    flex-direction: column;
 }
 
-.EmployeeScheduler-home h2 {
+.EmployeehomeEdits{
+    /* position: absolute; */
+    display: flex;
+    justify-content: space-between;
+    background-image: linear-gradient(270deg, rgb(22, 80, 74),rgb(178, 255, 201));
+}
+
+.logo{
+    /* width: 100%; */
+}
+.EmployeeScheduler-home span {
     color: white;
-    font-size: 2rem;
-    font-weight: bold;
-    margin-bottom: 10px;
+    font-size: 0.9rem;
+    /* font-weight: bold; */
+    margin-right: 10px;
 }
 
 .EmployeeScheduler-home p {
     color: #fff;
-    font-size: 1.2rem;
+    font-size: 0.8rem;
     margin: 0;
     font-style: italic;
 }

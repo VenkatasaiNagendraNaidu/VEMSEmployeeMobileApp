@@ -60,7 +60,7 @@
   .action-buttons {
     display: flex;
     justify-content: space-between;
-    margin-top: 16px;
+    margin-top: 20px;
   }
   
   .otp-button {
@@ -80,6 +80,7 @@
     justify-content: space-evenly;
     margin-top: 16px;
   }
+  
   /* .bottom-navigation div{
     display: flex;
     flex-direction: column;
